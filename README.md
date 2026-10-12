@@ -1,0 +1,2 @@
+# ScamSentry
+Detect.Protect.Respond
