@@ -1,7 +1,9 @@
 # Netlify Configuration for ScamSentry DRP Platform
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [build]
-  base = "ScamScentry"
   command = "npm run build"
   publish = ".next"
 
