@@ -71,7 +71,17 @@ export default function AICopilotModal() {
           action: 'copilot_chat',
           payload: {
             prompt: promptText,
-            currentThreat: selectedThreat,
+            currentThreat: selectedThreat || (threats && threats[0]) || null,
+            allThreats: threats.map(t => ({
+              id: t.id,
+              name: t.name,
+              category: t.category,
+              platform: t.platform,
+              riskScore: t.riskScore,
+              severity: t.severity,
+              targetIdentifier: t.targetIdentifier,
+              explainabilitySummary: t.explainabilitySummary,
+            })),
             brand: selectedBrand,
           },
         }),

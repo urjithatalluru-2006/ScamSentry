@@ -73,7 +73,7 @@ async function callGroqWithFallback(
 export async function GET() {
   const apiKey = process.env.GROQ_API_KEY;
   const model = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
-  const isConfigured = Boolean(apiKey && apiKey.trim().length > 0 && !apiKey.includes('your_groq_api_key'));
+  const isConfigured = Boolean(apiKey && apiKey.trim().length > 10 && !apiKey.includes('your_groq_api_key'));
 
   return NextResponse.json({
     status: 'ok',
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: false,
         fallbackRequired: true,
-        message: 'Groq API key not configured in .env. Falling back to local heuristic detection engine.',
+        message: 'Groq API key not configured in environment variables. Falling back to local heuristic detection engine.',
       });
     }
 
@@ -205,13 +205,15 @@ You MUST respond strictly with a valid JSON object matching this schema:
     }
 
     if (action === 'copilot_chat') {
-      const { prompt, currentThreat, brand } = payload;
+      const { prompt, currentThreat, allThreats, brand } = payload;
 
-      const systemPrompt = `You are the ScamSentry Threat Intelligence AI Copilot.
-Provide actionable, precise, and authoritative cybersecurity guidance.
-Respond strictly in JSON format:
+      const systemPrompt = `You are the ScamSentry Threat Intelligence AI Copilot for Digital Risk Protection.
+Provide authoritative, actionable cybersecurity guidance directly addressing the analyst query.
+If asked "is this threat or not" or whether a target is malicious, give a clear, unambiguous verdict (e.g. "**VERDICT: CONFIRMED THREAT (CRITICAL)**") followed by bullet-pointed evidence, technical risk assessment, and recommended takedown/containment steps.
+
+Respond strictly in valid JSON format:
 {
-  "answer": string (markdown supported),
+  "answer": string (markdown supported with clear headings, bold text, and direct answer),
   "structuredFindings": {
     "observedEvidence": string[],
     "aiInterpretation": string,
@@ -222,7 +224,8 @@ Respond strictly in JSON format:
 }`;
 
       const userPrompt = `Analyst Query: "${prompt}"
-Context Target Threat: ${JSON.stringify(currentThreat || null)}
+Active Target Threat: ${JSON.stringify(currentThreat || (allThreats && allThreats[0]) || 'No single threat selected')}
+All Monitored Telemetry: ${JSON.stringify(allThreats || [])}
 Protected Brand: ${JSON.stringify(brand || null)}`;
 
       const groqResult = await callGroqWithFallback(apiKey, [

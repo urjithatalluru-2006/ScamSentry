@@ -19,6 +19,28 @@ export function generateCopilotAnswer(
   currentBrand?: BrandAsset
 ): CopilotResponse {
   const pLower = prompt.toLowerCase();
+  const activeThreat = currentThreat || allThreats[0];
+
+  // Direct threat verdict: "Is this a threat or not?"
+  if (pLower.includes('threat or not') || pLower.includes('is this threat') || pLower.includes('is it a threat') || pLower.includes('is this safe') || pLower.includes('is this malicious') || pLower.includes('threat or safe')) {
+    if (activeThreat) {
+      const isHighRisk = activeThreat.riskScore >= 50;
+      return {
+        answer: `### Security Verdict on **${activeThreat.name}** (${activeThreat.targetIdentifier})\n\n**VERDICT: ${isHighRisk ? '⚠️ CONFIRMED MALICIOUS THREAT' : '🔍 SUSPICIOUS ENTITY UNDER REVIEW'}**\n\n- **Calculated Risk Score:** **${activeThreat.riskScore}/100** (${activeThreat.severity.toUpperCase()})\n- **Confidence Level:** **${activeThreat.confidenceScore}%**\n- **Target Category:** ${activeThreat.category.replace('_', ' ').toUpperCase()} on platform **${activeThreat.platform.toUpperCase()}**\n\n**Reasoning & Indicators:**\n${activeThreat.explainabilitySummary}\n\n**Observable Telemetry Evidence:**\n${activeThreat.evidence.map(e => `• **${e.title}:** ${e.details}`).join('\n')}\n\n**Action Recommendation:**\n${isHighRisk ? 'Immediate platform takedown and perimeter blocking recommended.' : 'Continue continuous monitoring for DNS or content mutations.'}`,
+        structuredFindings: {
+          observedEvidence: activeThreat.evidence.map(e => `${e.title}: ${e.details}`),
+          aiInterpretation: `Target exhibits ${isHighRisk ? 'high-confidence deceptive markers' : 'anomalous indicators'} targeting ${currentBrand?.name || activeThreat.brandName}.`,
+          suggestedAction: isHighRisk ? 'Dispatch automated abuse report to registrar/platform.' : 'Triage with secondary sandbox check.',
+          humanApprovalRequired: true,
+        },
+        suggestedFollowUps: [
+          'Draft a platform-appropriate abuse report',
+          'Why was this profile flagged?',
+          'What additional evidence would strengthen this assessment?'
+        ],
+      };
+    }
+  }
 
   // Scenario 1: "Why was this flagged?" or "Why suspicious?"
   if (pLower.includes('why was this') || pLower.includes('why is this') || pLower.includes('what makes this') || pLower.includes('evidence supports')) {
