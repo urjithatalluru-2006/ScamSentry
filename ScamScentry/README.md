@@ -1,5 +1,9 @@
 # ScamSentry — AI-Powered Digital Risk Protection Platform (DRPP)
 
+<p align="center">
+  <img src="public/logo.png" alt="ScamSentry Logo" width="450"/>
+</p>
+
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.4.0-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.3.0-blue?style=flat&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
