@@ -127,6 +127,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+app link:https://scasentry.netlify.app/
+
+demo video:https://drive.google.com/file/d/10hfdFhOSfNIopEYmzbiHbc-mMR0o3D2g/view?usp=drivesdk
+
 ### Production Build
 ```bash
 npm run build
