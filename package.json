@@ -1,0 +1,11 @@
+{
+  "name": "scamsentry-workspace",
+  "version": "1.0.0",
+  "description": "ScamSentry Digital Risk Protection Platform",
+  "scripts": {
+    "dev": "npm --prefix ScamScentry run dev",
+    "build": "npm --prefix ScamScentry run build",
+    "start": "npm --prefix ScamScentry run start",
+    "lint": "npm --prefix ScamScentry run lint"
+  }
+}
