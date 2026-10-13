@@ -124,7 +124,53 @@ npm install
 # Start development server
 npm run dev
 ```
+### 8.Repository Structure
 
+ScamSentry/
+├── public/                 # Static assets and icons
+├── src/
+│   ├── components/         # SOC Dashboard UI, Modals, Threat Cards
+│   ├── services/           # Gemini API client & heuristic detection rules
+│   ├── data/               # Seeded threat records & test scenarios
+│   ├── types/              # STIX 2.1 threat schema and TypeScript interfaces
+│   ├── App.tsx             # Root component and navigation state
+│   └── main.tsx            # Application entry point
+├── .env.example            # Environment variables template
+├── .gitignore              # Ignores .env and build output
+├── package.json            # Dependencies and scripts
+└── README.md               # Documentation and architecture guide
+---
+
+### 9.Threat Detection Workflow (Flowchart)
+
+START: Entity Inspection Request
+                   │
+                   ▼
+   Is Entity in Brand Allowlist?
+      ├── [YES] ──► Verdict: SAFE (Score: 0/100) ──► Log to Audit Trail
+      │
+      └── [NO]
+            │
+            ▼
+   Run Deterministic Heuristics:
+   • Check Homoglyphs / Leetspeak (e.g., '1' for 'l', '0' for 'o')
+   • Calculate Levenshtein & Affix Distance (_support, -claim)
+   • Audit Permissions (READ_SMS, RECEIVE_SMS, etc.)
+            │
+            ▼
+   Call Google Gemini API:
+   • Analyze profile bio, intent language, and brand proximity
+   • Synthesize normalized Threat Score (0 - 100)
+            │
+            ▼
+   Risk Assessment & Categorization:
+   ├── Score >= 75: CRITICAL / HIGH ──► Trigger Active Alert & DMCA Draft
+   ├── Score 30-74: MEDIUM           ──► Queue for Copilot Investigation
+   └── Score < 30:  LOW / BENIGN     ──► Flag as Safe Collision
+            │
+            ▼
+   END: Persist Finding to Dashboard & Audit Trail
+---
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 app link:https://scasentry.netlify.app/
