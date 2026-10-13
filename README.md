@@ -180,6 +180,13 @@ app link:https://scasentry.netlify.app/
 
 demo video:https://drive.google.com/file/d/10hfdFhOSfNIopEYmzbiHbc-mMR0o3D2g/view?usp=drivesdk
 
+### Another type:Scam-Detection-Using-URL
+# 🛡️ Phishing URL Detection System
+
+github link:https://github.com/urjithatalluru-2006/Scam-Detection-Using-URL
+
+app link:https://urjithatalluru-2006-scam-detection-using-url-app-lvjiei.streamlit.app/
+
 ### Production Build
 ```bash
 npm run build
